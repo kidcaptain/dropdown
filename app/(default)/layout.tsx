@@ -4,7 +4,8 @@ import { useState } from 'react'
 
 interface Ville {
   tel: string,
-  label: string
+  label: string,
+  img: string
 }
 export default function DefaultLayout({
   children,
@@ -13,12 +14,59 @@ export default function DefaultLayout({
 }) {
 
   const [pays, setPays] = useState<any[]>([])
-  const [paysSelected, setPaysSelected] = useState<string>()
+  const [paysSelected, setPaysSelected] = useState<any>()
   const [actived, setActived] = useState<boolean>(false)
   const [clicked, setClicked] = useState<boolean>(false)
   const [hidden, setHidden] = useState<boolean>(false)
-  const [imageSrc, setImageSrc] = useState<string>("/images/testimonial-03.jpg")
-  const villes: Ville[] = [{ tel: "236", label: "Cameroun" },{ tel: "1", label: "Usa" },{ tel: "46", label: "Allemand" },{ tel: "237", label: "Cameroun" },{ tel: "237", label: "Cameroun" }, { tel: "237", label: "Cameroun" }, { tel: "237", label: "Cameroun" }]
+  const [imageSrc, setImageSrc] = useState<string>("/images/background.jpg")
+  const villes: Ville[] = [
+    {
+      tel: "213",
+      img: "/images/DZ.png",
+      label: "Algeria"
+    }
+    , {
+      tel: "244",
+      label: "Usa",
+      img: "/images/AO.png"
+    },
+    {
+      tel: "267",
+      label: "Botswana",
+      img: "/images/BW.png"
+    },
+    {
+      tel: "237",
+      label: "Cameroun",
+      img: "/images/CM.png"
+    },
+    {
+      tel: "237",
+      label: "Cameroun",
+      img: "/images/CM.png"
+    },
+    {
+      tel: "237",
+      label: "Cameroun",
+      img: "/images/CM.png"
+    },
+    {
+      tel: "237",
+      label: "Cameroun",
+      img: "/images/CM.png"
+    },
+    {
+      tel: "237",
+      label: "Cameroun",
+      img: "/images/CM.png"
+    },
+    {
+      tel: "237",
+      label: "Cameroun",
+      img: "/images/CM.png"
+    },
+  ]
+
 
   const handleKeyDownVille = (e: string) => {
     const tab: any[] = [];
@@ -38,8 +86,8 @@ export default function DefaultLayout({
     setPays(tab)
   }
 
-  const handleClickVille = (e: any, f: string) => {
-    setPaysSelected(`${e} ${f}`)
+  const handleClickVille = (e: any) => {
+    setPaysSelected(e)
     setPays([])
   }
   const onClick = () => {
@@ -75,8 +123,16 @@ export default function DefaultLayout({
           <div 
             className={` ${pays.length > 0 ? 'ring-2 ring-lime-300' : ""} relative z-50 w-full  text-xs border rounded-full border-stone-400`}>
            
-            <div className="z-10 flex items-center text-lg font-bold text-blue-500 bg-white border-none rounded-full focus:ring-2 focus-within: w-96 focus-visible:ring-2 focus-visible:ring-lime-500 disabled:text-gray-600 focus:ring-gray-100 bg-inherit">
-              <button onClick={onClick} className='flex p-5 text-xs font-bold border-r border-stone-400'>{paysSelected ?? "search"}</button>
+            <div className="z-10 flex items-center overflow-hidden text-lg font-bold text-blue-500 bg-white border-none rounded-full focus:ring-2 focus-within: w-96 focus-visible:ring-2 focus-visible:ring-lime-500 disabled:text-gray-600 focus:ring-gray-100 bg-inherit">
+              <button onClick={onClick} className='flex p-5 text-xs font-bold border-r border-stone-400'> {!paysSelected ? "search" : (
+                  <div className='flex items-center gap-1'>
+                    <div className='w-8 h-8 overflow-hidden rounded-full bg-slate-200'>
+                      <Image src={paysSelected.img} width={32} height={32} alt='image' />
+                    </div>
+                    <span> {paysSelected.label}</span>
+                    <span>{paysSelected.tel}</span>
+                  </div>
+                )}</button>
               <input
                 onChange={e => handleKeyDownVille(e.target.value)}
                 type="text"
@@ -93,10 +149,10 @@ export default function DefaultLayout({
             { 
               pays.length > 0 ? (
                   <div
-              className="absolute left-0 z-50 w-full mt-3 overflow-hidden text-sm text-gray-900 bg-white border shadow-xl rounded-3xl max-h-96"
+              className="absolute left-0 z-50 w-full mt-3 overflow-hidden overflow-y-auto text-sm text-gray-900 bg-white border shadow-xl rounded-3xl max-h-96"
             >
               <ul
-                className="w-full h-full overflow-x-hidden text-gray-500 scroller"
+                className="w-full h-full overflow-x-hidden text-gray-500"
               >
                 <li className='p-5 font-bold text-gray-600 bg-gray-50'>Search country</li>
                 {pays.map((i: any, index: number) => (
@@ -107,9 +163,15 @@ export default function DefaultLayout({
                     <div
                       role='button'
                       className="flex justify-between text-sm font-bold text-blue-600 "
-                      onClick={() => handleClickVille(i.label, i.tel)}
+                      onClick={() => handleClickVille(i)}
                     >
-                      <span> {i.label}</span>
+                       <div className='flex items-center gap-2'>
+                            <div className='w-8 h-8 overflow-hidden rounded-full bg-slate-200'>
+                              <Image src={i.img} width={32} height={32} alt='image' />
+                            </div>
+                            <span> {i.label}</span>
+                          </div>
+                      
                       <span>+{i.tel}</span>
 
                     </div>
@@ -121,13 +183,14 @@ export default function DefaultLayout({
               ) : null}
           </div>
           <button className='w-full p-5 mt-5 text-xl font-semibold text-teal-700 rounded-full bg-lime-400'>Start top-up</button>
+                  <button onClick={() => setActived(false)} className='p-2 text-stone-800 '>Close</button>
         </div>
         <div className='relative top-0 left-0 w-full h-full'>
           <div className=''>
 
           </div>
           <Image src={imageSrc == "" ? "/images/background.jpg" : imageSrc} width={500} sizes="100vw"
-            style={{ width: '100%', height: 'auto' }} alt='' onClick={() => setActived(!actived)}
+            style={{ width: '100%', height: 'auto' }} alt='' onClick={() => setActived(true)}
             height={500} className='w-full h-full opacity-20' />
         </div>
 
